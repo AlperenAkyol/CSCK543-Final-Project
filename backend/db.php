@@ -1,8 +1,8 @@
 <?php
 $host = 'localhost';
 $db   = 'recipe_db';
-$user = 'root'; 
-$pass = '';    
+$user = 'webuser';
+$pass = 'yourpassword';
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
