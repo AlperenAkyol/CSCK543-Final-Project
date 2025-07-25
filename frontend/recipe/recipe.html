@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recipe Details</title>
+</head>
+<body>
+    <a href="recipes.html">&lt; Back to Recipes</a>
+    <div id="main"></div>
+    <a id="rateLink" href="#">Rate this recipe</a>
+
+    <script>
+    async function loadRecipe() {
+        let urlParams = new URLSearchParams(window.location.search);
+        let id = urlParams.get('id');
+        if (!id) {
+            document.getElementById('main').innerText = "No recipe id given.";
+            return;
+        }
+        let res = await fetch("../../backend/recipe/detail.php?id=" + id);
+        let r = await res.json();
+        if (r.error) {
+            document.getElementById('main').innerText = r.error;
+            return;
+        }
+        let html = `<h2>${r.title}</h2>
+            <p><b>Category:</b> ${r.category}</p>
+            <p><b>Score:</b> ${r.score}</p>
+            <h3>Ingredients</h3><ul>`;
+        r.ingredients.forEach(i => html += `<li>${i.ingredient}: ${i.quantity}</li>`);
+        html += `</ul><h3>Steps</h3><ol>`;
+        r.steps.forEach(s => html += `<li>${s.description} (${s.duration_minutes} min)</li>`);
+        html += `</ol>`;
+        document.getElementById('main').innerHTML = html;
+        document.getElementById('rateLink').href = `rate.html?id=${id}`;
+    }
+    loadRecipe();
+    </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recipe List</title>
+</head>
+<body>
+    <h2>All Recipes</h2>
+    <form id="searchForm">
+        <input id="searchInput" placeholder="Search by title or category" />
+        <button type="submit">Search</button>
+    </form>
+    <ul id="recipeList"></ul>
+    <button onclick="logout()">Logout</button>
+    <script>
+    async function loadRecipes(q='') {
+        let url = q ? "../../backend/recipe/search.php?q=" + encodeURIComponent(q) : "../../backend/recipe/list.php";
+        let res = await fetch(url);
+        let data = await res.json();
+        let list = document.getElementById('recipeList');
+        list.innerHTML = '';
+        data.forEach(r => {
+            let li = document.createElement('li');
+            li.innerHTML = `<a href="recipe.html?id=${r.id}">${r.title}</a> (${r.category}) – Score: ${r.score || 0}
+                <a href="rate.html?id=${r.id}">Rate</a>`;
+            list.appendChild(li);
+        });
+    }
+    document.getElementById('searchForm').onsubmit = e => {
+        e.preventDefault();
+        loadRecipes(document.getElementById('searchInput').value);
+    };
+    loadRecipes();
+
+    function logout() {
+        window.location.href = "../user/login.html";
+    }
+    </script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8">
   <title>Login</title>
@@ -12,11 +12,12 @@
     <button type="submit">Login</button>
   </form>
   <div id="result"></div>
-
+  <p>No account? <a href="register.html">Register here</a></p>
   <script>
     document.getElementById("loginForm").onsubmit = async function(e) {
       e.preventDefault();
       const formData = new FormData(this);
+      // backend is ../../backend/user/login.php
       const resp = await fetch("../../backend/user/login.php", {
         method: "POST",
         body: formData
@@ -24,7 +25,8 @@
       const json = await resp.json();
       document.getElementById("result").textContent = json.message;
       if (json.success) {
-        // Optionally, redirect or show next steps
+        // Redirect to recipes page in recipe folder
+        window.location.href = "../recipe/recipes.html";
       }
     };
   </script>

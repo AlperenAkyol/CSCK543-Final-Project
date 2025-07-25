@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rate Recipe</title>
+</head>
+<body>
+    <a href="recipes.html">&lt; Back to Recipes</a>
+    <h2>Rate this recipe</h2>
+    <form id="rateForm">
+        <label for="rating">Rating (1-5):</label>
+        <input type="number" min="1" max="5" id="rating" name="rating" required>
+        <button type="submit">Submit</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+    document.getElementById("rateForm").onsubmit = async function(e) {
+        e.preventDefault();
+        let urlParams = new URLSearchParams(window.location.search);
+        let id = urlParams.get('id');
+        if (!id) {
+            document.getElementById('result').innerText = "No recipe id.";
+            return;
+        }
+        let formData = new FormData();
+        formData.append('recipe_id', id);
+        formData.append('rating', document.getElementById('rating').value);
+        let resp = await fetch("../../backend/recipe/rate.php", {
+            method: "POST",
+            body: formData
+        });
+        let json = await resp.json();
+        document.getElementById('result').innerText = json.message;
+    }
+    </script>
+</body>
+</html>
