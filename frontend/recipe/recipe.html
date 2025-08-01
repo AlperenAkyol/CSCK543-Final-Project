@@ -6,22 +6,21 @@
     <title>Recipe Details</title>
     <style>
         :root {
-            --primary-color: #808000; /* Olive green */
+            --primary-color: #808000;
             --secondary-color: #6b6b00;
             --background-color: #f9f9f5;
             --text-color: #333;
             --light-text: #666;
             --card-bg: #fff;
             --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --gold: #ffb400;
         }
-        
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
         body {
             background-color: var(--background-color);
             color: var(--text-color);
@@ -30,7 +29,6 @@
             max-width: 800px;
             margin: 0 auto;
         }
-        
         .back-link {
             display: inline-block;
             color: var(--primary-color);
@@ -38,31 +36,24 @@
             margin-bottom: 20px;
             font-size: 1rem;
         }
-        
-        .back-link:hover {
-            text-decoration: underline;
-        }
-        
+        .back-link:hover { text-decoration: underline; }
         .recipe-container {
             background-color: var(--card-bg);
             border-radius: 8px;
             padding: 25px;
             box-shadow: var(--shadow);
         }
-        
         h2 {
             color: var(--primary-color);
             margin-bottom: 15px;
             font-size: 1.8rem;
         }
-        
         .recipe-meta {
             display: flex;
             gap: 20px;
             margin-bottom: 20px;
             color: var(--light-text);
         }
-        
         h3 {
             color: var(--primary-color);
             margin: 20px 0 10px;
@@ -70,15 +61,8 @@
             border-bottom: 1px solid #eee;
             padding-bottom: 5px;
         }
-        
-        ul, ol {
-            padding-left: 20px;
-        }
-        
-        li {
-            margin-bottom: 8px;
-        }
-        
+        ul, ol { padding-left: 20px; }
+        li { margin-bottom: 8px; }
         .rate-link {
             display: inline-block;
             background-color: var(--primary-color);
@@ -90,43 +74,80 @@
             font-size: 1rem;
             transition: background-color 0.3s;
         }
-        
-        .rate-link:hover {
-            background-color: var(--secondary-color);
+        .rate-link:hover { background-color: var(--secondary-color); }
+        .fav-star-box {
+            text-align: right;
+            margin-top: 10px;
+            margin-bottom: 10px;
         }
-        
+        .fav-star {
+            font-size: 2rem;
+            cursor: pointer;
+            color: #ccc;
+            transition: color 0.2s;
+            vertical-align: middle;
+        }
+        .fav-star.filled { color: var(--gold); }
         @media (max-width: 600px) {
-            body {
-                padding: 15px;
-            }
-            
-            .recipe-container {
-                padding: 15px;
-            }
-            
-            h2 {
-                font-size: 1.5rem;
-            }
-            
-            .recipe-meta {
-                flex-direction: column;
-                gap: 5px;
-            }
+            body { padding: 15px; }
+            .recipe-container { padding: 15px; }
+            h2 { font-size: 1.5rem; }
+            .recipe-meta { flex-direction: column; gap: 5px; }
         }
     </style>
 </head>
 <body>
     <a class="back-link" href="recipes.html">&lt; Back to Recipes</a>
+    <div class="fav-star-box">
+        <span id="favoriteStar" class="fav-star" title="Add to favorites">&#9734;</span>
+    </div>
     <div class="recipe-container" id="main"></div>
     <a class="rate-link" id="rateLink" href="#">Rate this recipe</a>
 
     <script>
-        // Get recipe ID from URL
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
-        
-        // Sample data for fallback
-        const sampleRecipes = [
+        let user_id = null; // Will be set after fetching session
+
+        // ---- FAVORITE STAR LOGIC ----
+        function setFavoriteStar(isFav) {
+            const star = document.getElementById('favoriteStar');
+            if (isFav) {
+                star.innerHTML = "&#9733;"; // filled
+                star.classList.add('filled');
+                star.title = "Remove from favorites";
+            } else {
+                star.innerHTML = "&#9734;"; // empty
+                star.classList.remove('filled');
+                star.title = "Add to favorites";
+            }
+        }
+
+        async function checkFavorite(recipeId) {
+            if (!user_id) return false;
+            let res = await fetch("../../backend/recipe/favorites_list.php?user_id=" + user_id);
+            let favs = await res.json();
+            return favs.some(r => r.id == recipeId);
+        }
+
+        async function toggleFavorite(recipeId) {
+            if (!user_id) {
+                alert("You must be logged in to favorite recipes.");
+                return;
+            }
+            const isFav = await checkFavorite(recipeId);
+            let url = isFav ? "../../backend/recipe/unfavorite.php" : "../../backend/recipe/favorite.php";
+            let formData = new FormData();
+            formData.append("user_id", user_id);
+            formData.append("recipe_id", recipeId);
+
+            let resp = await fetch(url, { method: "POST", body: formData });
+            let json = await resp.json();
+            alert(json.message);
+            setFavoriteStar(!isFav);
+        }
+
+                const sampleRecipes = [
             {
                 id: 1,
                 title: "Spaghetti Bolognese",
@@ -299,91 +320,96 @@
                 ]
             }
         ];
-
         async function loadRecipe() {
             const main = document.getElementById('main');
-            
             if (!id) {
                 main.innerHTML = "<p>No recipe id given.</p>";
                 return;
             }
-            
             try {
-                // First try to fetch from backend
                 let res = await fetch("../../backend/recipe/detail.php?id=" + id);
-                
                 if (res.ok) {
                     let r = await res.json();
-                    
-                    if (r.error) {
-                        throw new Error(r.error);
-                    }
-                    
-                    let html = `
-                        <h2>${r.title}</h2>
+                    if (r.error) throw new Error(r.error);
+                    let html = `<h2>${r.title}</h2>
                         <div class="recipe-meta">
                             <span><b>Category:</b> ${r.category}</span>
                             <span><b>Score:</b> ${r.score}</span>
                         </div>
-                        <h3>Ingredients</h3>
-                        <ul>`;
-                    
-                    r.ingredients.forEach(i => {
-                        html += `<li>${i.ingredient}: ${i.quantity}</li>`;
-                    });
-                    
+                        <h3>Ingredients</h3><ul>`;
+                    if (Array.isArray(r.ingredients)) {
+                        r.ingredients.forEach(i => {
+                            html += `<li>${i.ingredient}: ${i.quantity}</li>`;
+                        });
+                    }
                     html += `</ul><h3>Steps</h3><ol>`;
-                    
-                    r.steps.forEach(s => {
-                        html += `<li>${s.description} (${s.duration_minutes} min)</li>`;
-                    });
-                    
+                    if (Array.isArray(r.steps)) {
+                        r.steps.forEach(s => {
+                            html += `<li>${s.description} (${s.duration_minutes} min)</li>`;
+                        });
+                    }
                     html += `</ol>`;
-                    
                     main.innerHTML = html;
                     document.getElementById('rateLink').href = `rate.html?id=${id}`;
                     return;
                 }
             } catch (error) {
                 console.error('Error fetching recipe:', error);
-                // Fall through to sample data
             }
-            
             // Fallback to sample data if API fails
             const recipe = sampleRecipes.find(r => r.id === parseInt(id));
-            
             if (!recipe) {
                 main.innerHTML = "<p>Recipe not found.</p>";
                 return;
             }
-            
-            let html = `
-                <h2>${recipe.title}</h2>
+            let html = `<h2>${recipe.title}</h2>
                 <div class="recipe-meta">
                     <span><b>Category:</b> ${recipe.category}</span>
                     <span><b>Score:</b> ${recipe.score}</span>
                 </div>
                 <h3>Ingredients</h3>
                 <ul>`;
-            
             recipe.ingredients.forEach(i => {
                 html += `<li>${i.ingredient}: ${i.quantity}</li>`;
             });
-            
             html += `</ul><h3>Steps</h3><ol>`;
-            
             recipe.steps.forEach(s => {
                 html += `<li>${s.description} (${s.duration_minutes} min)</li>`;
             });
-            
             html += `</ol>`;
-            
             main.innerHTML = html;
             document.getElementById('rateLink').href = `rate.html?id=${id}`;
         }
-        
-        // Load recipe on page load
-        loadRecipe();
+
+        // ---- SESSION FETCH & STAR SETUP ----
+        async function getSessionUser() {
+            // This endpoint should return JSON: { user_id: 1, ... }
+            let resp = await fetch("../../backend/session/user.php");
+            if (resp.ok) {
+                let user = await resp.json();
+                if (user.user_id) {
+                    user_id = user.user_id;
+                }
+            }
+        }
+
+        // Initial page load logic
+        document.addEventListener('DOMContentLoaded', async function () {
+            await getSessionUser();
+            await loadRecipe();
+            if (id && user_id) {
+                const isFav = await checkFavorite(id);
+                setFavoriteStar(isFav);
+                document.getElementById('favoriteStar').onclick = function () {
+                    toggleFavorite(id);
+                };
+            } else {
+                setFavoriteStar(false);
+                document.getElementById('favoriteStar').onclick = function () {
+                    alert("You must be logged in to favorite recipes.");
+                };
+            }
+        });
     </script>
 </body>
 </html>
