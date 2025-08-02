@@ -8,7 +8,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $password  = $_POST['password'] ?? '';
     $full_name = trim($_POST['full_name'] ?? '');
 
-    // Basic validation
     if (empty($username) || empty($email) || empty($password)) {
         echo json_encode(["success" => false, "message" => "Missing required fields."]);
         exit;
@@ -22,7 +21,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit;
     }
 
-    // Insert user
     $stmt = $pdo->prepare("INSERT INTO users (username, email, password, full_name) VALUES (?, ?, ?, ?)");
     $stmt->execute([$username, $email, $password, $full_name]);
 

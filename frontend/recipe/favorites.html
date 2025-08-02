@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Favorite Recipes</title>
     <style>
-        /* Reuse your recipe list CSS for consistency */
         :root {
             --primary-color: #808000;
             --secondary-color: #6b6b00;
@@ -75,7 +74,7 @@
     <h2>★ My Favorite Recipes</h2>
     <ul id="favoriteList"></ul>
     <script>
-        const user_id = 1; // Replace with actual user ID/session if available
+        const user_id = 1; // (Dummy value) Replace with actual user ID/session if available
 
         async function loadFavorites() {
             let res = await fetch("../../backend/recipe/favorites_list.php?user_id=" + user_id);

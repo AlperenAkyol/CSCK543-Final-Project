@@ -1,17 +1,11 @@
-
-
-
-body { /* Body styling */
+body {
 	min-height: 100vh;
 	height: 100vh;
 	margin-left: 35px;
-  background-color: smokewhite; /* Background color for the body */
- 
-	
+	background-color: smokewhite;
 }
 
-
-.left { /* Left section styling */
+.left {
 	float: left;
 	width: 47%;
 	margin-left: 8px;
@@ -19,391 +13,358 @@ body { /* Body styling */
 	padding-top: 0px;
 }
 
-.left h1 { /* Heading style for the left section */
-	font-size: 20px; /* Font size for the left section */
-	font-family: Arial; /* Font family for the left section */
-	font-weight: bolder; /* Font weight for the left section */
+.left h1 { 
+	font-size: 20px; 
+	font-family: Arial; 
+	font-weight: bolder; 
 }
 
 .left h2 {
-	font-size: 18px; /* Font size for the left section */
-	font-family: Arial; /* Font family for the left section */
-  font-weight: bolder; /* Font weight for the left section */
+	font-size: 18px; 
+	font-family: Arial; 
+	font-weight: bolder; 
 }
 
 .left p {
-	font-size: 14px; /* Font size for the left section paragraphs */
-	font-family: Arial; /* Font family for the left section paragraphs */
-  color: #333; /* Text color for the left section paragraphs */
-  text-align: left; /* Text alignment for the left section paragraphs */
-
+	font-size: 14px; 
+	font-family: Arial; 
+	color: #333;
+	text-align: left; 
 } 
 
-.right {  /* Right section styling */
-	float: right; /* Float the right section to the right */
-	width: 47%; /* Width of the right section */
-	margin-right: 20px; /* Margin on the right side */
-  padding-top: 0px; /* Padding at the top of the right section */
-  
+.right {  
+	float: right; 
+	width: 47%; 
+	margin-right: 20px; 
+	padding-top: 0px; 
 }
 
 .right h1 {
-	font-size: 20px; /* Font size for the right section */
-	font-family: Arial; /* Font family for the right section */
-	font-weight: bolder; /* Font weight for the right section */
+	font-size: 20px;
+	font-family: Arial; 
+	font-weight: bolder; 
 }
 
 .right h2 {
-	font-size: 18px; /* Font size for the right section */
-	font-family: Arial; /* Font family for the right section */
-	font-weight: bolder; /* Font weight for the right section */
-
+	font-size: 18px;
+	font-family: Arial; 
+	font-weight: bolder;
 }
 
 .right p {
-  font-size: 14px; /* Font size for the right section paragraphs */
-  font-family: Arial; /* Font family for the right section paragraphs */
-  color: #333; /* Text color for the right section paragraphs */
-  text-align: left; /* Text alignment for the right section paragraphs */
+	font-size: 14px;
+	font-family: Arial;
+	color: #333;
+	text-align: left;
 } 
 
-
-.uolfmafooter  {  /* Footer section of the recipe page */
-  background-color: #808000; /* Footer background color */
-	color: white; /* Footer text color */
-	clear: both; /* Clears the float to ensure the footer stays at the bottom */
-	position: bottom; /* Positioning the footer at the bottom */
-	bottom: 0; /* Positions the footer at the bottom of the page */
-	left: 0; /* Aligns the footer to the left */
-	z-index: 10; /* Ensures the footer stays at the bottom of the page */
-	height: 30px; /* Height of the footer */
-	padding-top: 10px; /* Padding for the footer */
-  text-align: center; /* Center align the footer text */
-  font-size: 14px; /* Font size for the footer text */
-  font-family: Arial, sans-serif; /* Font family for the footer text */
-  padding-left: 0;  /* Padding on the left side of the footer */
-  padding-right: 0; /* Padding on the right side of the footer */
-  width: auto;  /* Width of the footer */
+.uolfmafooter {
+	background-color: #808000;
+	color: white;
+	clear: both;
+	position: bottom;
+	bottom: 0;
+	left: 0;
+	z-index: 10;
+	height: 30px;
+	padding-top: 10px;
+	text-align: center;
+	font-size: 14px;
+	font-family: Arial, sans-serif;
+	padding-left: 0;
+	padding-right: 0;
+	width: auto;
 }
 
-
-
-.uolfmaMainMenu { /* Main navigation menu style */
-  background-color: white; /*#808000; /* white background for the menu */
-  border-radius: 2px; /* Rounded corners for the menu */
-  padding: 4px 6px; /* Padding around the menu */
-  margin: 0; /* Remove default margin */
-  text-align: left; /* Center align the menu items */
-  margin-bottom: 0px; /* Padding at the bottom of the menu */
-  margin-top: 5px; /* Padding at the top of the menu */
-	margin-left: 30px;  /* Margin on the left side of the menu */
-  margin-right: 30px; /* Margin on the right side of the menu */
-   
-}
-	
-.uolfmaMainMenu li {   /* main navigation menu style */
-	display: inline; /* Display the menu horizontally */
-	list-style-type: none; /* Remove bullet points */
-	margin-left: 40px; /* Space between menu items */
-	margin-right:30px;
+.uolfmaMainMenu {
+	background-color: white;
+	border-radius: 2px;
+	padding: 4px 6px;
+	margin: 0;
+	text-align: left;
+	margin-bottom: 0px;
+	margin-top: 5px;
+	margin-left: 30px;
+	margin-right: 30px;
 }
 
-
-.uolfmafooter p { /* Footer text style */
-  margin: 0; /* Remove default margin */
-  text-align: center; /* Center align the footer text */
-  font-size: 14px; /* Font size for the footer text */
-  font-family: Arial, sans-serif; /* Font family for the footer text */
+.uolfmaMainMenu li {
+	display: inline;
+	list-style-type: none;
+	margin-left: 40px;
+	margin-right: 30px;
 }
 
+.uolfmafooter p {
+	margin: 0;
+	text-align: center;
+	font-size: 14px;
+	font-family: Arial, sans-serif;
+}
 
-h1  {
+h1 {
 	size: 40px;
-	
 }
 
 h2 {
-    text-align: left;
-    color: #333;
-    size: 9px;
+	text-align: left;
+	color: #333;
+	size: 9px;
 }
 
-
-
 form {
-  max-width: 400px;
-  margin: 0px auto;
-  padding: 20px;
-  background: gray;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  margin-left: 0px;
+	max-width: 400px;
+	margin: 0px auto;
+	padding: 20px;
+	background: gray;
+	border-radius: 5px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	margin-left: 0px;
 }
 
 #loginForm input[type="text"] {
-	
-  width: 90%;
-  padding: 0px;
-  margin: 5px 0;
-  height: 35px;
-  border: 0px solid #ccc;
-  border-radius: 2px;
-  margin-left: 4px;
-  text-align: 2px;
+	width: 90%;
+	padding: 0px;
+	margin: 5px 0;
+	height: 35px;
+	border: 0px solid #ccc;
+	border-radius: 2px;
+	margin-left: 4px;
+	text-align: 2px;
 }
-  
-  
 
 #loginForm input[type="password"] {
-  width: 90%;
-  padding: 0px;
-  margin: 5px 0;
-  height: 35px;
-  border: 0px solid #ccc;
-  border-radius: 2px;
-  margin-left: 4px;
-  text-align:2px;
-  
+	width: 90%;
+	padding: 0px;
+	margin: 5px 0;
+	height: 35px;
+	border: 0px solid #ccc;
+	border-radius: 2px;
+	margin-left: 4px;
+	text-align: 2px;
 }
 
 button {
-  width: 40%;
-  padding: 0px;
-  background: #5cb85c;
-  border: none;
-  border-radius: 4px;
-  color: white;
-  font-size: 16px;
-  font-weight: bolder;
-  height: 30px;
+	width: 40%;
+	padding: 0px;
+	background: #5cb85c;
+	border: none;
+	border-radius: 4px;
+	color: white;
+	font-size: 16px;
+	font-weight: bolder;
+	height: 30px;
 }
 
 button:hover {
-  background: #4cae4c;
+	background: #4cae4c;
 }
 
 #result {
-  text-align: center;
-  margin: 20px 0;
+	text-align: center;
+	margin: 20px 0;
 }
 
 p {
-  text-align: left;
+	text-align: left;
 }
 
 img {
-  max-width: auto;
-  height: auto;
+	max-width: auto;
+	height: auto;
 }
 
-uolfmaFigure img { /* This settings is done for recipe images figures that are assigned the uolfmaFigure class */
-  width: 80%;
-  max-width: fit-content; /* Ensures the image does not exceed its container's width */
-  height: auto; /* Maintains the aspect ratio of the image */
-  border-radius: 2px; /* Rounded corners for the image */
+uolfmaFigure img {
+	width: 80%;
+	max-width: fit-content;
+	height: auto;
+	border-radius: 2px;
 }
 
 .uolfmaImage {
-  width: 105%;
-  height: 80%;
-  border-radius: 10px; /* rounded corners */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s; 
-}	
+	width: 105%;
+	height: 80%;
+	border-radius: 10px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	transition: transform 0.2s; 
+}
 
 .uolfmaFigure {
 	margin-left: 0px;
-	
 }
-
-
-
 
 .GbRecipe {
-  float: left;
-  width: 24%;
-  padding: 1px;
+	float: left;
+	width: 24%;
+	padding: 1px;
 }
 
-/* Clear floats after image containers */
 .row::after {
-  content: "";
-  clear: both;
-  display: table;
+	content: "";
+	clear: both;
+	display: table;
 }
 
-
-.logo { /* Logo styling */
-  display: inline-block;
-  margin: 0px; 
-  height: 120px;
-  width: auto; /* correct proportions to specified height */
-  border-radius: 0%; /* makes it a circle */
-  clear: both;
-  padding: 2px 2px; /* Padding around the logo */
-  margin-right: auto;
-  padding-right: 100px; /* Padding to the right of the logo */
-  padding-top:2px;
-  
+.logo {
+	display: inline-block;
+	margin: 0px; 
+	height: 120px;
+	width: auto;
+	border-radius: 0%;
+	clear: both;
+	padding: 2px 2px;
+	margin-right: auto;
+	padding-right: 100px;
+	padding-top: 2px;
 }
-
-
 
 .uolfmaFigure figcaption {
-	font-size: 1.em; /* Smaller font size for figure captions */
-	color: white; /* Color for figure captions */
-	text-align: left; /* Left align figure captions */
-	margin-top: 0.1em; /* Margin at the top of figure captions */
+	font-size: 1.em;
+	color: white;
+	text-align: left;
+	margin-top: 0.1em;
 	background-color: #808000;
-	Height:40px;
+	Height: 40px;
 	width: 105%;
 	border-radius: 1px;
 	padding-top: 10px;
 	padding-left: 3px;
-  font: 1em sans-serif;
-}	
-
-
+	font: 1em sans-serif;
+}
 
 .img uolfmaFigure {
-	
 	width: 80%;
 	Height: 80%;
-	border-radius:0.1px; /* rounded corners */
+	border-radius: 0.1px;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 	transition: transform 0.2s;
 }
 
 .endp {
-  text-align: justify; /* Justify align the footer text */
-  font-size: 14px; /* Font size for the footer text */
-  font-family: Arial, sans-serif; /* Font family for the footer text */
-  margin-top: 20px; /* Margin at the top of the footer text */
-  color: #333; /* Text color for the footer text */
-  line-height: 1.5; /* Line height for better readability */
+	text-align: justify;
+	font-size: 14px;
+	font-family: Arial, sans-serif;
+	margin-top: 20px;
+	color: #333;
+	line-height: 1.5;
 }
 
-
-#registerForm { /* Registration form styling */
-  max-width: 400px; /* Maximum width of the registration form */
-  padding: 20px; /* Padding inside the form */
-  padding-top: 10px; /* Padding at the top of the form */
-  background: rgb(177, 189, 12); /* Background color of the form */
-  border-radius: 5px; /* Rounded corners for the form */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow effect for the form */
-  align-self: first baseline; /* Aligns the form to the first baseline */
+#registerForm {
+	max-width: 400px;
+	padding: 20px;
+	padding-top: 10px;
+	background: rgb(177, 189, 12);
+	border-radius: 5px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	align-self: first baseline;
 }
 
-#registerForm input[type="text"], /* Input fields styling */
-#registerForm input[type="email"], /* Email input field styling */
-#registerForm input[type="password"]  /* Password input field styling */{
-  width: 100%;
-  padding: 0px;
-  margin: 5px 0;
-  height: 35px;
-  border: 0px solid #ccc;
-  border-radius: 2px;
-  margin-left: 4px;
-  text-align: 2px;
-} 
-
-#registerForm button { /* Button styling in the registration form */
-  width: 50%;
-  padding: 5px;
-  margin-top: 10px; /* Margin at the top of the button */
-  background: #c76c17; /* Button background color */
-  border: none; /* No border for the button */
-  border-radius: 4px; /* Rounded corners for the button */
-  color: white; /* Button text color */
-  font-size: 16px; /* Font size for the button text */
-  font-weight: bolder; /* Bold font weight for the button text */
-  height: 30px; /* Height of the button */
+#registerForm input[type="text"],
+#registerForm input[type="email"],
+#registerForm input[type="password"] {
+	width: 100%;
+	padding: 0px;
+	margin: 5px 0;
+	height: 35px;
+	border: 0px solid #ccc;
+	border-radius: 2px;
+	margin-left: 4px;
+	text-align: 2px;
 }
 
-
-.uolfmafooter { /* Footer section of the recipe page */
-  background-color: #808000; /* Footer background color */
-  color: white; /* Footer text color */
-  clear: both; /* Clears the float to ensure the footer stays at the bottom */
-  position: fixed; /* Positioning the footer relative to its parent */
-  bottom: 0; /* Positions the footer at the bottom of the page */
-  left: 0; /* Aligns the footer to the left */
-  z-index: 0; /* Ensures the footer stays at the bottom of the page */
-  height: 30px; /* Height of the footer */
-  padding-top: 10px; /* Padding for the footer */
-  text-align: center; /* Center align the footer text */
-  font-size: 14px; /* Font size for the footer text */
-  font-family: Arial, sans-serif; /* Font family for the footer text */
-  padding-left: 0; /* Padding on the left side of the footer */
-  padding-right: 0; /* Padding on the right side of the footer */
-  width: 100%; /* Width of the footer */
-  bottom: 0; /* Ensures the footer stays at the bottom of the page */
-  margin-top: auto;
+#registerForm button {
+	width: 50%;
+	padding: 5px;
+	margin-top: 10px;
+	background: #c76c17;
+	border: none;
+	border-radius: 4px;
+	color: white;
+	font-size: 16px;
+	font-weight: bolder;
+	height: 30px;
 }
 
-
-
-.rglobal { /* Global section styling */
-  height: 60%;
-  padding: 5px; /* Padding around the global section */
+.uolfmafooter {
+	background-color: #808000;
+	color: white;
+	clear: both;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	z-index: 0;
+	height: 30px;
+	padding-top: 10px;
+	text-align: center;
+	font-size: 14px;
+	font-family: Arial, sans-serif;
+	padding-left: 0;
+	padding-right: 0;
+	width: 100%;
+	bottom: 0;
+	margin-top: auto;
 }
 
-.rglobal p { /* Paragraph styling in the global section */
-  text-align: left; /* Left align the text in the global section */
-  font-size: 14px; /* Font size for the global section text */
-  font-family: Arial, sans-serif; /* Font family for the global section text */
-  color: #333; /* Text color for the global section text */
-  margin-top: 10px; /* Margin at the top of the global section text */
+.rglobal {
+	height: 60%;
+	padding: 5px;
 }
 
-.uolfmarfooter { /* Footer section of the recipe page */
-  background-color: #808000; /* Footer background color */
-  color: white; /* Footer text color */
-  clear: both; /* Clears the float to ensure the footer stays at the bottom */
-  position: fixed; /* Positioning the footer relative to its parent */
-  bottom: 0; /* Positions the footer at the bottom of the page */
-  left: 0; /* Aligns the footer to the left */
-  z-index: 0; /* Ensures the footer stays at the bottom of the page */
-  height: 50px; /* Height of the footer */
-  padding-top: 10px; /* Padding for the footer */
-  text-align: center; /* Center align the footer text */
-  font-size: 14px; /* Font size for the footer text */
-  font-family: Arial, sans-serif; /* Font family for the footer text */
-  padding-left: 0; /* Padding on the left side of the footer */
-  padding-right: 0; /* Padding on the right side of the footer */
-  width: 100%; /* Width of the footer */
-  bottom: 0; /* Ensures the footer stays at the bottom of the page */
-  margin-top: auto;
-  text-align: center;
-
+.rglobal p {
+	text-align: left;
+	font-size: 14px;
+	font-family: Arial, sans-serif;
+	color: #333;
+	margin-top: 10px;
 }
 
-.uolfmarfooter p { /* Footer text style */
-  margin: 0; /* Remove default margin */
-  text-align: center; /* Center align the footer text */
-  font-size: 14px; /* Font size for the footer text */
-  font-family: Arial, sans-serif; /* Font family for the footer text */
+.uolfmarfooter {
+	background-color: #808000;
+	color: white;
+	clear: both;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	z-index: 0;
+	height: 50px;
+	padding-top: 10px;
+	text-align: center;
+	font-size: 14px;
+	font-family: Arial, sans-serif;
+	padding-left: 0;
+	padding-right: 0;
+	width: 100%;
+	bottom: 0;
+	margin-top: auto;
+	text-align: center;
 }
 
-#loginForm  { /* Login form styling */
-  max-width: 400px; /* Maximum width of the registration form */
-  padding: 20px; /* Padding inside the form */
-  padding-top: 10px; /* Padding at the top of the form */
-  background: rgb(177, 189, 12); /* Background color of the form */
-  border-radius: 5px; /* Rounded corners for the form */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow effect for the form */
-  align-self: first baseline; /* Aligns the form to the first baseline */
+.uolfmarfooter p {
+	margin: 0;
+	text-align: center;
+	font-size: 14px;
+	font-family: Arial, sans-serif;
 }
 
-#loginForm button { /* Button styling in the login form */
-  width: 50%;
-  padding: 5px;
-  margin-top: 10px; /* Margin at the top of the button */
-  background: #c76c17; /* Button background color */
-  border: none; /* No border for the button */
-  border-radius: 4px; /* Rounded corners for the button */
-  color: white; /* Button text color */
-  font-size: 16px; /* Font size for the button text */
-  font-weight: bolder; /* Bold font weight for the button text */
-  height: 30px; /* Height of the button */
+#loginForm {
+	max-width: 400px;
+	padding: 20px;
+	padding-top: 10px;
+	background: rgb(177, 189, 12);
+	border-radius: 5px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	align-self: first baseline;
+}
+
+#loginForm button {
+	width: 50%;
+	padding: 5px;
+	margin-top: 10px;
+	background: #c76c17;
+	border: none;
+	border-radius: 4px;
+	color: white;
+	font-size: 16px;
+	font-weight: bolder;
+	height: 30px;
 }

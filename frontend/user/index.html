@@ -9,8 +9,8 @@
   <meta name="description" content="Login to your recipe account">
   <meta name="keywords" content="login, user, account"> 
   <title>CSCK543-GB Recipes</title>
-   <ul class="uolfmaMainMenu"><!-- Unordered list for the navigation menu -->
-			<a href="index.html"><!-- to the home page -->
+   <ul class="uolfmaMainMenu">
+			<a href="index.html">
 			<img class="logo" src="LogoFiles/gblogo.png" alt="GB Logo">
 			</a>
 			 
@@ -135,7 +135,6 @@
     document.getElementById("loginForm").onsubmit = async function(e) {
       e.preventDefault();
       
-      // Get the result div
       const resultDiv = document.getElementById("result");
       resultDiv.textContent = "Logging in...";
       resultDiv.style.color = "blue";
@@ -143,7 +142,6 @@
       const formData = new FormData(this);
       
       try {
-        // backend is ../../backend/user/login.php
         const resp = await fetch("../../backend/user/login.php", {
           method: "POST",
           body: formData
@@ -158,7 +156,6 @@
         if (json.success) {
           resultDiv.style.color = "green";
           resultDiv.textContent = json.message;
-          // Redirect to recipes page in recipe folder
           setTimeout(() => {
             window.location.href = "../recipe/recipes.html";
           }, 1000);

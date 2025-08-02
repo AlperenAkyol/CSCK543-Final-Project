@@ -1,8 +1,6 @@
--- Create the database
 CREATE DATABASE recipe_db;
 USE recipe_db;
 
--- Users table
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
@@ -11,7 +9,6 @@ CREATE TABLE users (
     full_name VARCHAR(100)
 );
 
--- Recipes table
 CREATE TABLE recipes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(100) NOT NULL,
@@ -21,7 +18,6 @@ CREATE TABLE recipes (
     score FLOAT DEFAULT 0
 );
 
--- Ingredients table
 CREATE TABLE recipe_ingredients (
     id INT AUTO_INCREMENT PRIMARY KEY,
     recipe_id INT,
@@ -30,7 +26,6 @@ CREATE TABLE recipe_ingredients (
     FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
 );
 
--- Steps table
 CREATE TABLE recipe_steps (
     id INT AUTO_INCREMENT PRIMARY KEY,
     recipe_id INT,
@@ -40,7 +35,6 @@ CREATE TABLE recipe_steps (
     FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
 );
 
--- Favourites table
 CREATE TABLE favourites (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
@@ -49,7 +43,6 @@ CREATE TABLE favourites (
     FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
 );
 
--- Insert 8 recipes
 INSERT INTO recipes (title, category) VALUES
 ('Spaghetti Bolognese', 'Main'),
 ('Vegan Pancakes', 'Dessert'),
@@ -60,12 +53,11 @@ INSERT INTO recipes (title, category) VALUES
 ('Mango Pie', 'Dessert'),
 ('Mushroom Doner', 'Main');
 
--- Insert 2 users
+
 INSERT INTO users (username, email, password, full_name) VALUES
 ('johndoe', 'john@example.com', 'password', 'John Doe'),
 ('janedoe', 'jane@example.com', 'password', 'Jane Doe');
 
--- 1. Spaghetti Bolognese
 INSERT INTO recipe_ingredients (recipe_id, ingredient, quantity) VALUES
 (1, 'Spaghetti', '200g'), (1, 'Minced beef', '250g'), (1, 'Onion', '1'),
 (1, 'Garlic', '2 cloves'), (1, 'Tomato', '400g'), (1, 'Herbs', 'To taste'),
@@ -78,7 +70,6 @@ INSERT INTO recipe_steps (recipe_id, step_number, description, duration_minutes)
 (1,4,'Simmer sauce.',15),
 (1,5,'Mix with spaghetti and serve.',5);
 
--- 2. Vegan Pancakes
 INSERT INTO recipe_ingredients (recipe_id, ingredient, quantity) VALUES
 (2, 'Flour', '120g'), (2, 'Almond milk', '250ml'), (2, 'Baking powder', '1 tsp'),
 (2, 'Sugar', '2 tbsp'), (2, 'Salt', 'Pinch'), (2, 'Oil', '2 tbsp');
@@ -90,7 +81,6 @@ INSERT INTO recipe_steps (recipe_id, step_number, description, duration_minutes)
 (2,4,'Pour batter and cook until bubbles form.',3),
 (2,5,'Flip and cook the other side.',2);
 
--- 3. Healthy Pizza
 INSERT INTO recipe_ingredients (recipe_id, ingredient, quantity) VALUES
 (3, 'Wholewheat flour', '200g'), (3, 'Tomato sauce', '100g'), (3, 'Mozzarella', '100g'),
 (3, 'Mixed veggies', '100g'), (3, 'Olive oil', '1 tbsp');
@@ -102,7 +92,6 @@ INSERT INTO recipe_steps (recipe_id, step_number, description, duration_minutes)
 (3,4,'Add cheese and veggies.',3),
 (3,5,'Bake in oven.',20);
 
--- 4. Easy Lamb Biryani
 INSERT INTO recipe_ingredients (recipe_id, ingredient, quantity) VALUES
 (4, 'Lamb', '250g'), (4, 'Basmati rice', '200g'), (4, 'Onion', '1'),
 (4, 'Spices', 'To taste'), (4, 'Yogurt', '50g'), (4, 'Herbs', 'To taste');
@@ -114,7 +103,6 @@ INSERT INTO recipe_steps (recipe_id, step_number, description, duration_minutes)
 (4,4,'Layer rice over lamb.',2),
 (4,5,'Cook until rice is done.',20);
 
--- 5. Couscous Salad
 INSERT INTO recipe_ingredients (recipe_id, ingredient, quantity) VALUES
 (5, 'Couscous', '150g'), (5, 'Vegetables', '150g'), (5, 'Lemon juice', '2 tbsp'),
 (5, 'Olive oil', '2 tbsp'), (5, 'Herbs', 'To taste');
@@ -126,7 +114,6 @@ INSERT INTO recipe_steps (recipe_id, step_number, description, duration_minutes)
 (5,4,'Add dressing.',2),
 (5,5,'Toss and serve.',1);
 
--- 6. Plum Clafoutis
 INSERT INTO recipe_ingredients (recipe_id, ingredient, quantity) VALUES
 (6, 'Plums', '300g'), (6, 'Flour', '100g'), (6, 'Sugar', '100g'),
 (6, 'Eggs', '2'), (6, 'Milk', '200ml'), (6, 'Butter', '30g'),
@@ -139,7 +126,6 @@ INSERT INTO recipe_steps (recipe_id, step_number, description, duration_minutes)
 (6,4,'Pour batter over plums.',2),
 (6,5,'Bake until set.',30);
 
--- 7. Mango Pie
 INSERT INTO recipe_ingredients (recipe_id, ingredient, quantity) VALUES
 (7, 'Mangoes', '2'), (7, 'Pie crust', '1'), (7, 'Sugar', '80g'),
 (7, 'Eggs', '2'), (7, 'Cream', '100ml'), (7, 'Cornstarch', '2 tbsp'),
@@ -152,7 +138,6 @@ INSERT INTO recipe_steps (recipe_id, step_number, description, duration_minutes)
 (7,4,'Pour filling into crust.',2),
 (7,5,'Bake, then chill.',30);
 
--- 8. Mushroom Doner
 INSERT INTO recipe_ingredients (recipe_id, ingredient, quantity) VALUES
 (8, 'Mushrooms', '200g'), (8, 'Flatbread', '2'), (8, 'Onion', '1'),
 (8, 'Tomato', '1'), (8, 'Lettuce', '50g'), (8, 'Yogurt sauce', '50g'), (8, 'Spices', 'To taste');
@@ -164,7 +149,6 @@ INSERT INTO recipe_steps (recipe_id, step_number, description, duration_minutes)
 (8,4,'Assemble flatbread with filling.',3),
 (8,5,'Serve with yogurt sauce.',1);
 
--- Each user marks one favourite
 INSERT INTO favourites (user_id, recipe_id) VALUES
-(1, 3),   -- John favourites Healthy Pizza
-(2, 2);   -- Jane favourites Vegan Pancakes
+(1, 3),
+(2, 2);

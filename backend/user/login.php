@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $stmt->execute([$username_or_email, $username_or_email]);
     $user = $stmt->fetch();
 
-    if ($user && $user['password'] === $password) { // plain text password check
+    if ($user && $user['password'] === $password) {
         session_start();
         $_SESSION['user_id'] = $user['id'];
         echo json_encode(["success" => true, "message" => "Login successful!"]);

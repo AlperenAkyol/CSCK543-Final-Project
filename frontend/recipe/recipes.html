@@ -6,7 +6,7 @@
     <title>Recipe List</title>
     <style>
         :root {
-            --primary-color: #808000; /* Olive green */
+            --primary-color: #808000;
             --secondary-color: #6b6b00;
             --background-color: #f9f9f5;
             --text-color: #333;
@@ -305,7 +305,6 @@
                 
                 let data = await res.json();
                 
-                // Add images to the database data using our image map
                 data = data.map(recipe => {
                     const imageUrl = imageMap[recipe.title.toLowerCase()];
                     return {
@@ -360,16 +359,13 @@
         });
 
         function logout() {
-            // In a real app, this would clear session data
             alert('Logging out...');
             window.location.href = "../user/login.html";
         }
 
-        // Initial load
         loadRecipes();
     </script>
 
-    <!-- Footer section -->
     <footer>
         <p>&copy; 2025 Recipes. All rights reserved.</p>
         <p>Contact us: info@Recipes.com</p>

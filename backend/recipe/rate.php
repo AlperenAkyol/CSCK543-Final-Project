@@ -15,7 +15,7 @@ if ($recipe_id === 0 || $rating < 1 || $rating > 5) {
     exit;
 }
 
-// Update the recipe rating
+// Recipe rating
 $stmt = $pdo->prepare("UPDATE recipes SET total_points = total_points + ?, rate_count = rate_count + 1, score = (total_points + ?) / (rate_count + 1) WHERE id = ?");
 $stmt->execute([$rating, $rating, $recipe_id]);
 
