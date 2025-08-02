@@ -13,7 +13,6 @@
             --light-text: #666;
             --card-bg: #fff;
             --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            --gold: #ffb400;
         }
         * {
             box-sizing: border-box;
@@ -75,19 +74,6 @@
             transition: background-color 0.3s;
         }
         .rate-link:hover { background-color: var(--secondary-color); }
-        .fav-star-box {
-            text-align: right;
-            margin-top: 10px;
-            margin-bottom: 10px;
-        }
-        .fav-star {
-            font-size: 2rem;
-            cursor: pointer;
-            color: #ccc;
-            transition: color 0.2s;
-            vertical-align: middle;
-        }
-        .fav-star.filled { color: var(--gold); }
         @media (max-width: 600px) {
             body { padding: 15px; }
             .recipe-container { padding: 15px; }
@@ -98,56 +84,14 @@
 </head>
 <body>
     <a class="back-link" href="recipes.html">&lt; Back to Recipes</a>
-    <div class="fav-star-box">
-        <span id="favoriteStar" class="fav-star" title="Add to favorites">&#9734;</span>
-    </div>
     <div class="recipe-container" id="main"></div>
     <a class="rate-link" id="rateLink" href="#">Rate this recipe</a>
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
-        let user_id = null; // Will be set after fetching session
 
-        // ---- FAVORITE STAR LOGIC ----
-        function setFavoriteStar(isFav) {
-            const star = document.getElementById('favoriteStar');
-            if (isFav) {
-                star.innerHTML = "&#9733;"; // filled
-                star.classList.add('filled');
-                star.title = "Remove from favorites";
-            } else {
-                star.innerHTML = "&#9734;"; // empty
-                star.classList.remove('filled');
-                star.title = "Add to favorites";
-            }
-        }
-
-        async function checkFavorite(recipeId) {
-            if (!user_id) return false;
-            let res = await fetch("../../backend/recipe/favorites_list.php?user_id=" + user_id);
-            let favs = await res.json();
-            return favs.some(r => r.id == recipeId);
-        }
-
-        async function toggleFavorite(recipeId) {
-            if (!user_id) {
-                alert("You must be logged in to favorite recipes.");
-                return;
-            }
-            const isFav = await checkFavorite(recipeId);
-            let url = isFav ? "../../backend/recipe/unfavorite.php" : "../../backend/recipe/favorite.php";
-            let formData = new FormData();
-            formData.append("user_id", user_id);
-            formData.append("recipe_id", recipeId);
-
-            let resp = await fetch(url, { method: "POST", body: formData });
-            let json = await resp.json();
-            alert(json.message);
-            setFavoriteStar(!isFav);
-        }
-
-                const sampleRecipes = [
+        const sampleRecipes = [
             {
                 id: 1,
                 title: "Spaghetti Bolognese",
@@ -320,6 +264,7 @@
                 ]
             }
         ];
+
         async function loadRecipe() {
             const main = document.getElementById('main');
             if (!id) {
@@ -381,34 +326,8 @@
             document.getElementById('rateLink').href = `rate.html?id=${id}`;
         }
 
-        // ---- SESSION FETCH & STAR SETUP ----
-        async function getSessionUser() {
-            // This endpoint should return JSON: { user_id: 1, ... }
-            let resp = await fetch("../../backend/session/user.php");
-            if (resp.ok) {
-                let user = await resp.json();
-                if (user.user_id) {
-                    user_id = user.user_id;
-                }
-            }
-        }
-
-        // Initial page load logic
         document.addEventListener('DOMContentLoaded', async function () {
-            await getSessionUser();
             await loadRecipe();
-            if (id && user_id) {
-                const isFav = await checkFavorite(id);
-                setFavoriteStar(isFav);
-                document.getElementById('favoriteStar').onclick = function () {
-                    toggleFavorite(id);
-                };
-            } else {
-                setFavoriteStar(false);
-                document.getElementById('favoriteStar').onclick = function () {
-                    alert("You must be logged in to favorite recipes.");
-                };
-            }
         });
     </script>
 </body>

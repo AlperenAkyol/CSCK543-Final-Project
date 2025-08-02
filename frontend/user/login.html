@@ -1,18 +1,36 @@
 <!DOCTYPE html>
 <html>
-<head>
+<head>  
   <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="uolfma.css">
+      <link rel="icon" type="image/x-icon" href="FaviconLogo.ico">
+	  <link rel="icon" type="image/x-icon" href="/LogoFiles/FaviconLogo.ico">
+  <meta name="description" content="Login to your recipe account">
+  <meta name="keywords" content="login, user, account"> 
   <title>Login</title>
+   <ul class="uolfmaMainMenu"><!-- Unordered list for the navigation menu -->
+			<a href="index.html"><!-- to the home page -->
+			<img class="logo" src="LogoFiles/gblogo.png" alt="GB Logo">
+			</a>
 </head>
 <body>
+<div class="rglobal">
+
   <h2>Login</h2>
   <form id="loginForm">
-    <input name="username_or_email" placeholder="Username or Email" required /><br>
+    <input name="username_or_email" type="text" placeholder="Username or Email" required /><br>
     <input name="password" type="password" placeholder="Password" required /><br>
     <button type="submit">Login</button>
   </form>
   <div id="result"></div>
   <p>No account? <a href="register.html">Register here</a></p>
+</div>
+
+<div class="uolfmarfooter"><!-- Footer section -->
+  <p>&copy; 2023 CSCK543-GB Recipes. All rights reserved.</p>
+</div>
+
   <script>
     document.getElementById("loginForm").onsubmit = async function(e) {
       e.preventDefault();
