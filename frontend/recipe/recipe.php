@@ -1,97 +1,101 @@
+<?php
+// Simulate logged-in user (extend with $_SESSION later if needed)
+$user_id = 1;
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recipe Details</title>
-    <style>
-        :root {
-            --primary-color: #808000;
-            --secondary-color: #6b6b00;
-            --background-color: #f9f9f5;
-            --text-color: #333;
-            --light-text: #666;
-            --card-bg: #fff;
-            --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        body {
-            background-color: var(--background-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            padding: 20px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .back-link {
-            display: inline-block;
-            color: var(--primary-color);
-            text-decoration: none;
-            margin-bottom: 20px;
-            font-size: 1rem;
-        }
-        .back-link:hover { text-decoration: underline; }
-        .recipe-container {
-            background-color: var(--card-bg);
-            border-radius: 8px;
-            padding: 25px;
-            box-shadow: var(--shadow);
-        }
-        h2 {
-            color: var(--primary-color);
-            margin-bottom: 15px;
-            font-size: 1.8rem;
-        }
-        .recipe-meta {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
-            color: var(--light-text);
-        }
-        h3 {
-            color: var(--primary-color);
-            margin: 20px 0 10px;
-            font-size: 1.4rem;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 5px;
-        }
-        ul, ol { padding-left: 20px; }
-        li { margin-bottom: 8px; }
-        .rate-link {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 4px;
-            text-decoration: none;
-            margin-top: 20px;
-            font-size: 1rem;
-            transition: background-color 0.3s;
-        }
-        .rate-link:hover { background-color: var(--secondary-color); }
-        @media (max-width: 600px) {
-            body { padding: 15px; }
-            .recipe-container { padding: 15px; }
-            h2 { font-size: 1.5rem; }
-            .recipe-meta { flex-direction: column; gap: 5px; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Recipe Details</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --primary-color: #808000;
+      --secondary-color: #6b6b00;
+      --background-color: #f9f9f5;
+      --text-color: #333;
+      --light-text: #666;
+      --card-bg: #fff;
+      --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.6;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .back-link {
+      display: inline-block;
+      color: var(--primary-color);
+      text-decoration: none;
+      margin-bottom: 20px;
+      font-size: 1rem;
+    }
+    .back-link:hover { text-decoration: underline; }
+    .recipe-container {
+      background-color: var(--card-bg);
+      border-radius: 8px;
+      padding: 25px;
+      box-shadow: var(--shadow);
+    }
+    h2 {
+      color: var(--primary-color);
+      margin-bottom: 15px;
+      font-size: 1.8rem;
+    }
+    .recipe-meta {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+      color: var(--light-text);
+    }
+    h3 {
+      color: var(--primary-color);
+      margin: 20px 0 10px;
+      font-size: 1.4rem;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 5px;
+    }
+    ul, ol { padding-left: 20px; }
+    li { margin-bottom: 8px; }
+    .rate-link {
+      display: inline-block;
+      background-color: var(--primary-color);
+      color: white;
+      padding: 8px 15px;
+      border-radius: 4px;
+      text-decoration: none;
+      margin-top: 20px;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+    .rate-link:hover { background-color: var(--secondary-color); }
+    @media (max-width: 600px) {
+      body { padding: 15px; }
+      .recipe-container { padding: 15px; }
+      h2 { font-size: 1.5rem; }
+      .recipe-meta { flex-direction: column; gap: 5px; }
+    }
+  </style>
 </head>
 <body>
-    <a class="back-link" href="recipes.html">&lt; Back to Recipes</a>
-    <div class="recipe-container" id="main"></div>
-    <a class="rate-link" id="rateLink" href="#">Rate this recipe</a>
+  <a class="back-link" href="recipes.php">&lt; Back to Recipes</a>
+  <div class="recipe-container" id="main"></div>
+  <a class="rate-link" id="rateLink" href="#">Rate this recipe</a>
 
-    <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const id = urlParams.get('id');
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
 
-        const sampleRecipes = [
+     const sampleRecipes = [
             {
                 id: 1,
                 title: "Spaghetti Bolognese",
@@ -265,70 +269,70 @@
             }
         ];
 
-        async function loadRecipe() {
-            const main = document.getElementById('main');
-            if (!id) {
-                main.innerHTML = "<p>No recipe id given.</p>";
-                return;
-            }
-            try {
-                let res = await fetch("../../backend/recipe/detail.php?id=" + id);
-                if (res.ok) {
-                    let r = await res.json();
-                    if (r.error) throw new Error(r.error);
-                    let html = `<h2>${r.title}</h2>
-                        <div class="recipe-meta">
-                            <span><b>Category:</b> ${r.category}</span>
-                            <span><b>Score:</b> ${r.score}</span>
-                        </div>
-                        <h3>Ingredients</h3><ul>`;
-                    if (Array.isArray(r.ingredients)) {
-                        r.ingredients.forEach(i => {
-                            html += `<li>${i.ingredient}: ${i.quantity}</li>`;
-                        });
-                    }
-                    html += `</ul><h3>Steps</h3><ol>`;
-                    if (Array.isArray(r.steps)) {
-                        r.steps.forEach(s => {
-                            html += `<li>${s.description} (${s.duration_minutes} min)</li>`;
-                        });
-                    }
-                    html += `</ol>`;
-                    main.innerHTML = html;
-                    document.getElementById('rateLink').href = `rate.html?id=${id}`;
-                    return;
-                }
-            } catch (error) {
-                console.error('Error fetching recipe:', error);
-            }
-            // Fallback to sample data if API fails
-            const recipe = sampleRecipes.find(r => r.id === parseInt(id));
-            if (!recipe) {
-                main.innerHTML = "<p>Recipe not found.</p>";
-                return;
-            }
-            let html = `<h2>${recipe.title}</h2>
-                <div class="recipe-meta">
-                    <span><b>Category:</b> ${recipe.category}</span>
-                    <span><b>Score:</b> ${recipe.score}</span>
-                </div>
-                <h3>Ingredients</h3>
-                <ul>`;
-            recipe.ingredients.forEach(i => {
-                html += `<li>${i.ingredient}: ${i.quantity}</li>`;
-            });
-            html += `</ul><h3>Steps</h3><ol>`;
-            recipe.steps.forEach(s => {
-                html += `<li>${s.description} (${s.duration_minutes} min)</li>`;
-            });
-            html += `</ol>`;
-            main.innerHTML = html;
-            document.getElementById('rateLink').href = `rate.html?id=${id}`;
-        }
+    async function loadRecipe() {
+      const main = document.getElementById('main');
+      if (!id) {
+        main.innerHTML = "<p>No recipe id given.</p>";
+        return;
+      }
 
-        document.addEventListener('DOMContentLoaded', async function () {
-            await loadRecipe();
-        });
-    </script>
+      try {
+        let res = await fetch("../../backend/recipe/detail.php?id=" + id);
+        if (res.ok) {
+          let r = await res.json();
+          if (r.error) throw new Error(r.error);
+          let html = `<h2>${r.title}</h2>
+            <div class="recipe-meta">
+              <span><b>Category:</b> ${r.category}</span>
+              <span><b>Score:</b> ${r.score}</span>
+            </div>
+            <h3>Ingredients</h3><ul>`;
+          if (Array.isArray(r.ingredients)) {
+            r.ingredients.forEach(i => {
+              html += `<li>${i.ingredient}: ${i.quantity}</li>`;
+            });
+          }
+          html += `</ul><h3>Steps</h3><ol>`;
+          if (Array.isArray(r.steps)) {
+            r.steps.forEach(s => {
+              html += `<li>${s.description} (${s.duration_minutes} min)</li>`;
+            });
+          }
+          html += `</ol>`;
+          main.innerHTML = html;
+          document.getElementById('rateLink').href = `rate.php?id=${id}`;
+          return;
+        }
+      } catch (error) {
+        console.error('Error fetching recipe:', error);
+      }
+
+      // Fallback to sample data
+      const recipe = sampleRecipes.find(r => r.id === parseInt(id));
+      if (!recipe) {
+        main.innerHTML = "<p>Recipe not found.</p>";
+        return;
+      }
+
+      let html = `<h2>${recipe.title}</h2>
+        <div class="recipe-meta">
+          <span><b>Category:</b> ${recipe.category}</span>
+          <span><b>Score:</b> ${recipe.score}</span>
+        </div>
+        <h3>Ingredients</h3><ul>`;
+      recipe.ingredients.forEach(i => {
+        html += `<li>${i.ingredient}: ${i.quantity}</li>`;
+      });
+      html += `</ul><h3>Steps</h3><ol>`;
+      recipe.steps.forEach(s => {
+        html += `<li>${s.description} (${s.duration_minutes} min)</li>`;
+      });
+      html += `</ol>`;
+      main.innerHTML = html;
+      document.getElementById('rateLink').href = `rate.php?id=${id}`;
+    }
+
+    document.addEventListener('DOMContentLoaded', loadRecipe);
+  </script>
 </body>
 </html>

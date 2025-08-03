@@ -1,3 +1,7 @@
+<?php
+// In a real session, you'd pull $userId from $_SESSION
+$userId = 1;
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -115,14 +119,14 @@
   </style>
 </head>
 <body>
-  <a class="back-link" href="recipes.html">&lt; Back to Recipes</a>
+  <a class="back-link" href="recipes.php">&lt; Back to Recipes</a>
   <div class="recipe-container" id="main"></div>
   <a class="rate-link" id="rateLink" href="#">Rate this recipe</a>
 
   <script>
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
-    const userId = 1; // simulate user session (replace this with real user ID)
+    const userId = <?php echo json_encode($userId); ?>;
 
     async function loadRecipe() {
       const main = document.getElementById("main");
@@ -156,7 +160,7 @@
           html += `</ol>`;
 
           main.innerHTML = html;
-          document.getElementById("rateLink").href = `rate.html?id=${id}`;
+          document.getElementById("rateLink").href = `rate.php?id=${id}`;
           addFavoriteButton();
           return;
         }
