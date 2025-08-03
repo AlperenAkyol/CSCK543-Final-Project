@@ -1,6 +1,31 @@
 <?php
-// Simulated user/session handling (extend with $_SESSION as needed)
-$user_id = 1;
+session_start();
+require_once '../../backend/db.php';
+$recipeId = intval($_GET['id'] ?? 0);
+$userId = $_SESSION['user_id'] ?? null;
+$message = null;
+
+// Fetch the recipe to display title and basic info
+$recipe = null;
+if ($recipeId > 0) {
+    $stmt = $pdo->prepare("SELECT id, title, category, score FROM recipes WHERE id = ?");
+    $stmt->execute([$recipeId]);
+    $recipe = $stmt->fetch();
+}
+
+// Handle rating submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $recipe) {
+    $rating = intval($_POST['rating'] ?? 0);
+
+    if ($rating < 1 || $rating > 5) {
+        $message = "Please enter a rating from 1 to 5.";
+    } else {
+        // Update recipe rating logic (as in your backend)
+        $stmt = $pdo->prepare("UPDATE recipes SET total_points = total_points + ?, rate_count = rate_count + 1, score = (total_points + ?) / (rate_count + 1) WHERE id = ?");
+        $stmt->execute([$rating, $rating, $recipeId]);
+        $message = "Thank you for rating!";
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -98,53 +123,27 @@ $user_id = 1;
   </style>
 </head>
 <body>
-
   <a href="recipes.php">&larr; Back to Recipes</a>
   <h2>Rate This Recipe</h2>
 
-  <form id="rateForm">
-    <label for="rating">Rating (1 to 5):</label>
-    <input type="number" id="rating" name="rating" min="1" max="5" required>
-    <button type="submit">Submit Rating</button>
-  </form>
-
-  <div id="result"></div>
+  <?php if (!$recipe): ?>
+    <div id="result">Recipe not found.</div>
+  <?php elseif ($message): ?>
+    <div id="result"><?= htmlspecialchars($message) ?></div>
+    <p style="text-align: center; margin-top: 20px;">
+      <a href="recipe.php?id=<?= htmlspecialchars($recipeId) ?>">&#8592; Back to Recipe</a>
+    </p>
+  <?php else: ?>
+    <form method="post" action="rate.php?id=<?= htmlspecialchars($recipeId) ?>">
+      <label for="rating">How would you rate "<?= htmlspecialchars($recipe['title']) ?>"?</label>
+      <input type="number" id="rating" name="rating" min="1" max="5" required>
+      <button type="submit">Submit Rating</button>
+    </form>
+  <?php endif; ?>
 
   <footer>
     <p>&copy; 2025 Recipes. All rights reserved.</p>
     <p>Contact us: info@recipes.com</p>
   </footer>
-
-  <script>
-    document.getElementById("rateForm").onsubmit = async function(e) {
-      e.preventDefault();
-      const urlParams = new URLSearchParams(window.location.search);
-      const id = urlParams.get('id');
-      const rating = document.getElementById('rating').value;
-
-      if (!id) {
-        document.getElementById('result').innerText = "No recipe ID provided.";
-        return;
-      }
-
-      try {
-        const formData = new FormData();
-        formData.append('recipe_id', id);
-        formData.append('rating', rating);
-
-        const resp = await fetch("../../backend/recipe/rate.php", {
-          method: "POST",
-          body: formData
-        });
-
-        const json = await resp.json();
-        document.getElementById('result').innerText = json.message || "Rating submitted!";
-      } catch (error) {
-        console.error("Rating submission failed:", error);
-        document.getElementById('result').innerText = "Error submitting rating.";
-      }
-    };
-  </script>
-
 </body>
 </html>

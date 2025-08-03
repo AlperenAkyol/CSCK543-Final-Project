@@ -1,13 +1,61 @@
 <?php
-// Simulate logged-in user (extend with $_SESSION later if needed)
-$user_id = 1;
+session_start();
+require_once '../../backend/db.php';
+$recipeId = intval($_GET['id'] ?? 0);
+$userId = $_SESSION['user_id'] ?? null;
+$recipe = null;
+$ingredients = [];
+$steps = [];
+$isFav = false;
+
+if ($recipeId > 0) {
+    // Main recipe info
+    $stmt = $pdo->prepare("SELECT * FROM recipes WHERE id = ?");
+    $stmt->execute([$recipeId]);
+    $recipe = $stmt->fetch();
+
+    // Ingredients
+    $stmt = $pdo->prepare("SELECT ingredient, quantity FROM recipe_ingredients WHERE recipe_id = ?");
+    $stmt->execute([$recipeId]);
+    $ingredients = $stmt->fetchAll();
+
+    // Steps
+    $stmt = $pdo->prepare("SELECT step_number, description, duration_minutes FROM recipe_steps WHERE recipe_id = ? ORDER BY step_number");
+    $stmt->execute([$recipeId]);
+    $steps = $stmt->fetchAll();
+
+    // Is this a favorite?
+    if ($userId) {
+        $stmt = $pdo->prepare("SELECT id FROM favourites WHERE user_id = ? AND recipe_id = ?");
+        $stmt->execute([$userId, $recipeId]);
+        $isFav = $stmt->fetch() ? true : false;
+    }
+}
+
+// Handle favorite add/remove
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $userId && $recipe) {
+    if (isset($_POST['action'])) {
+        if ($_POST['action'] === 'add') {
+            $stmt = $pdo->prepare("INSERT IGNORE INTO favourites (user_id, recipe_id) VALUES (?, ?)");
+            $stmt->execute([$userId, $recipeId]);
+            $isFav = true;
+        } elseif ($_POST['action'] === 'remove') {
+            $stmt = $pdo->prepare("DELETE FROM favourites WHERE user_id = ? AND recipe_id = ?");
+            $stmt->execute([$userId, $recipeId]);
+            $isFav = false;
+        }
+        // Redirect to avoid POST resubmission
+        header("Location: recipe.php?id=" . urlencode($recipeId));
+        exit;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Recipe Details</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     :root {
       --primary-color: #808000;
@@ -39,7 +87,9 @@ $user_id = 1;
       margin-bottom: 20px;
       font-size: 1rem;
     }
-    .back-link:hover { text-decoration: underline; }
+    .back-link:hover {
+      text-decoration: underline;
+    }
     .recipe-container {
       background-color: var(--card-bg);
       border-radius: 8px;
@@ -64,8 +114,12 @@ $user_id = 1;
       border-bottom: 1px solid #eee;
       padding-bottom: 5px;
     }
-    ul, ol { padding-left: 20px; }
-    li { margin-bottom: 8px; }
+    ul, ol {
+      padding-left: 20px;
+    }
+    li {
+      margin-bottom: 8px;
+    }
     .rate-link {
       display: inline-block;
       background-color: var(--primary-color);
@@ -77,262 +131,75 @@ $user_id = 1;
       font-size: 1rem;
       transition: background-color 0.3s;
     }
-    .rate-link:hover { background-color: var(--secondary-color); }
+    .rate-link:hover {
+      background-color: var(--secondary-color);
+    }
+    .fav-button {
+      display: inline-block;
+      margin-top: 20px;
+      margin-left: 10px;
+      padding: 8px 15px;
+      background-color: #808000;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .fav-button:hover {
+      background-color: #6b6b00;
+    }
     @media (max-width: 600px) {
-      body { padding: 15px; }
-      .recipe-container { padding: 15px; }
-      h2 { font-size: 1.5rem; }
-      .recipe-meta { flex-direction: column; gap: 5px; }
+      body {
+        padding: 15px;
+      }
+      .recipe-container {
+        padding: 15px;
+      }
+      h2 {
+        font-size: 1.5rem;
+      }
+      .recipe-meta {
+        flex-direction: column;
+        gap: 5px;
+      }
     }
   </style>
 </head>
 <body>
   <a class="back-link" href="recipes.php">&lt; Back to Recipes</a>
-  <div class="recipe-container" id="main"></div>
-  <a class="rate-link" id="rateLink" href="#">Rate this recipe</a>
-
-  <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get('id');
-
-     const sampleRecipes = [
-            {
-                id: 1,
-                title: "Spaghetti Bolognese",
-                category: "Italian",
-                score: 4.5,
-                ingredients: [
-                    { ingredient: "Spaghetti", quantity: "400g" },
-                    { ingredient: "Ground beef", quantity: "500g" },
-                    { ingredient: "Tomato sauce", quantity: "400ml" },
-                    { ingredient: "Onions", quantity: "2 medium" },
-                    { ingredient: "Garlic", quantity: "3 cloves" },
-                    { ingredient: "Italian herbs", quantity: "2 tsp" }
-                ],
-                steps: [
-                    { description: "Cook spaghetti according to package instructions in salted boiling water", duration_minutes: 10 },
-                    { description: "Meanwhile, brown ground beef in a large pan over medium heat", duration_minutes: 5 },
-                    { description: "Add finely chopped onions and garlic, cook until softened", duration_minutes: 3 },
-                    { description: "Add tomato sauce and herbs, simmer for 15 minutes", duration_minutes: 15 },
-                    { description: "Drain spaghetti and combine with sauce", duration_minutes: 2 }
-                ]
-            },
-            {
-                id: 2,
-                title: "Vegan Pancakes",
-                category: "Vegan",
-                score: 4.2,
-                ingredients: [
-                    { ingredient: "All-purpose flour", quantity: "200g" },
-                    { ingredient: "Almond milk", quantity: "300ml" },
-                    { ingredient: "Baking powder", quantity: "2 tsp" },
-                    { ingredient: "Maple syrup", quantity: "2 tbsp" },
-                    { ingredient: "Vanilla extract", quantity: "1 tsp" }
-                ],
-                steps: [
-                    { description: "Mix flour and baking powder in a large bowl", duration_minutes: 3 },
-                    { description: "Add almond milk, maple syrup and vanilla extract, whisk until smooth", duration_minutes: 3 },
-                    { description: "Heat a non-stick pan over medium heat", duration_minutes: 2 },
-                    { description: "Pour small amounts of batter to form pancakes", duration_minutes: 5 },
-                    { description: "Flip when bubbles form on the surface", duration_minutes: 3 }
-                ]
-            },
-            {
-                id: 3,
-                title: "Healthy Pizza",
-                category: "Healthy",
-                score: 4.0,
-                ingredients: [
-                    { ingredient: "Whole wheat pizza dough", quantity: "1 ball" },
-                    { ingredient: "Tomato passata", quantity: "150ml" },
-                    { ingredient: "Low-fat mozzarella", quantity: "150g" },
-                    { ingredient: "Mixed bell peppers", quantity: "1 cup" },
-                    { ingredient: "Mushrooms", quantity: "100g" },
-                    { ingredient: "Olive oil", quantity: "1 tbsp" }
-                ],
-                steps: [
-                    { description: "Preheat oven to 220°C (425°F)", duration_minutes: 10 },
-                    { description: "Roll out dough on a floured surface to desired thickness", duration_minutes: 5 },
-                    { description: "Spread tomato passata evenly over the dough", duration_minutes: 2 },
-                    { description: "Add sliced vegetables and cheese", duration_minutes: 5 },
-                    { description: "Bake for 12-15 minutes until crust is golden", duration_minutes: 15 }
-                ]
-            },
-            {
-                id: 4,
-                title: "Easy Lamb Biryani",
-                category: "Indian",
-                score: 4.7,
-                ingredients: [
-                    { ingredient: "Basmati rice", quantity: "300g" },
-                    { ingredient: "Lamb pieces", quantity: "500g" },
-                    { ingredient: "Plain yogurt", quantity: "200g" },
-                    { ingredient: "Biryani masala", quantity: "3 tbsp" },
-                    { ingredient: "Onions", quantity: "2 large" },
-                    { ingredient: "Ghee", quantity: "2 tbsp" }
-                ],
-                steps: [
-                    { description: "Marinate lamb in yogurt and biryani masala for at least 2 hours", duration_minutes: 120 },
-                    { description: "Wash and soak rice for 30 minutes", duration_minutes: 30 },
-                    { description: "Cook rice until 70% done, then drain", duration_minutes: 10 },
-                    { description: "In a heavy pot, layer rice and lamb mixture", duration_minutes: 5 },
-                    { description: "Cover and cook on low heat for 30 minutes (dum cooking)", duration_minutes: 30 }
-                ]
-            },
-            {
-                id: 5,
-                title: "Couscous Salad",
-                category: "Mediterranean",
-                score: 4.3,
-                ingredients: [
-                    { ingredient: "Couscous", quantity: "200g" },
-                    { ingredient: "Cherry tomatoes", quantity: "200g" },
-                    { ingredient: "Cucumber", quantity: "1 medium" },
-                    { ingredient: "Feta cheese", quantity: "100g" },
-                    { ingredient: "Kalamata olives", quantity: "50g" },
-                    { ingredient: "Lemon juice", quantity: "2 tbsp" },
-                    { ingredient: "Olive oil", quantity: "3 tbsp" }
-                ],
-                steps: [
-                    { description: "Prepare couscous according to package instructions", duration_minutes: 10 },
-                    { description: "Chop tomatoes, cucumber and olives", duration_minutes: 10 },
-                    { description: "Crumble feta cheese", duration_minutes: 2 },
-                    { description: "Mix all ingredients in a large bowl", duration_minutes: 5 },
-                    { description: "Whisk together lemon juice and olive oil for dressing", duration_minutes: 2 },
-                    { description: "Add dressing to salad and toss gently", duration_minutes: 2 }
-                ]
-            },
-            {
-                id: 6,
-                title: "Plum clafoutis",
-                category: "Dessert",
-                score: 4.1,
-                ingredients: [
-                    { ingredient: "Plums", quantity: "500g" },
-                    { ingredient: "Eggs", quantity: "3" },
-                    { ingredient: "Milk", quantity: "250ml" },
-                    { ingredient: "Flour", quantity: "100g" },
-                    { ingredient: "Sugar", quantity: "100g" },
-                    { ingredient: "Butter", quantity: "50g" }
-                ],
-                steps: [
-                    { description: "Preheat oven to 180°C (350°F)", duration_minutes: 10 },
-                    { description: "Wash and halve plums, removing stones", duration_minutes: 10 },
-                    { description: "Whisk eggs, sugar and flour together", duration_minutes: 5 },
-                    { description: "Gradually add milk while whisking", duration_minutes: 3 },
-                    { description: "Arrange plums in buttered dish, pour batter over", duration_minutes: 5 },
-                    { description: "Bake for 40 minutes until golden", duration_minutes: 40 }
-                ]
-            },
-            {
-                id: 7,
-                title: "Mango Pie",
-                category: "Dessert",
-                score: 4.4,
-                ingredients: [
-                    { ingredient: "Mangoes", quantity: "3 large" },
-                    { ingredient: "Pie crust", quantity: "1" },
-                    { ingredient: "Sugar", quantity: "100g" },
-                    { ingredient: "Cornstarch", quantity: "2 tbsp" },
-                    { ingredient: "Lemon juice", quantity: "1 tbsp" },
-                    { ingredient: "Egg", quantity: "1 (for egg wash)" }
-                ],
-                steps: [
-                    { description: "Preheat oven to 190°C (375°F)", duration_minutes: 10 },
-                    { description: "Peel and slice mangoes", duration_minutes: 10 },
-                    { description: "Mix mangoes with sugar, cornstarch and lemon juice", duration_minutes: 5 },
-                    { description: "Fill pie crust with mango mixture", duration_minutes: 5 },
-                    { description: "Add lattice top, brush with egg wash", duration_minutes: 5 },
-                    { description: "Bake for 45 minutes until golden", duration_minutes: 45 }
-                ]
-            },
-            {
-                id: 8,
-                title: "Mushroom Doner",
-                category: "Vegetarian",
-                score: 4.0,
-                ingredients: [
-                    { ingredient: "Mushrooms", quantity: "500g" },
-                    { ingredient: "Pita bread", quantity: "4" },
-                    { ingredient: "Yogurt", quantity: "200g" },
-                    { ingredient: "Garlic", quantity: "2 cloves" },
-                    { ingredient: "Lemon juice", quantity: "1 tbsp" },
-                    { ingredient: "Spices", quantity: "1 tbsp" }
-                ],
-                steps: [
-                    { description: "Marinate mushrooms in spices for 30 minutes", duration_minutes: 30 },
-                    { description: "Grill mushrooms until tender", duration_minutes: 10 },
-                    { description: "Mix yogurt with crushed garlic and lemon juice", duration_minutes: 5 },
-                    { description: "Warm pita bread", duration_minutes: 2 },
-                    { description: "Assemble doner with mushrooms and sauce", duration_minutes: 5 }
-                ]
-            }
-        ];
-
-    async function loadRecipe() {
-      const main = document.getElementById('main');
-      if (!id) {
-        main.innerHTML = "<p>No recipe id given.</p>";
-        return;
-      }
-
-      try {
-        let res = await fetch("../../backend/recipe/detail.php?id=" + id);
-        if (res.ok) {
-          let r = await res.json();
-          if (r.error) throw new Error(r.error);
-          let html = `<h2>${r.title}</h2>
-            <div class="recipe-meta">
-              <span><b>Category:</b> ${r.category}</span>
-              <span><b>Score:</b> ${r.score}</span>
-            </div>
-            <h3>Ingredients</h3><ul>`;
-          if (Array.isArray(r.ingredients)) {
-            r.ingredients.forEach(i => {
-              html += `<li>${i.ingredient}: ${i.quantity}</li>`;
-            });
-          }
-          html += `</ul><h3>Steps</h3><ol>`;
-          if (Array.isArray(r.steps)) {
-            r.steps.forEach(s => {
-              html += `<li>${s.description} (${s.duration_minutes} min)</li>`;
-            });
-          }
-          html += `</ol>`;
-          main.innerHTML = html;
-          document.getElementById('rateLink').href = `rate.php?id=${id}`;
-          return;
-        }
-      } catch (error) {
-        console.error('Error fetching recipe:', error);
-      }
-
-      // Fallback to sample data
-      const recipe = sampleRecipes.find(r => r.id === parseInt(id));
-      if (!recipe) {
-        main.innerHTML = "<p>Recipe not found.</p>";
-        return;
-      }
-
-      let html = `<h2>${recipe.title}</h2>
-        <div class="recipe-meta">
-          <span><b>Category:</b> ${recipe.category}</span>
-          <span><b>Score:</b> ${recipe.score}</span>
-        </div>
-        <h3>Ingredients</h3><ul>`;
-      recipe.ingredients.forEach(i => {
-        html += `<li>${i.ingredient}: ${i.quantity}</li>`;
-      });
-      html += `</ul><h3>Steps</h3><ol>`;
-      recipe.steps.forEach(s => {
-        html += `<li>${s.description} (${s.duration_minutes} min)</li>`;
-      });
-      html += `</ol>`;
-      main.innerHTML = html;
-      document.getElementById('rateLink').href = `rate.php?id=${id}`;
-    }
-
-    document.addEventListener('DOMContentLoaded', loadRecipe);
-  </script>
+  <div class="recipe-container">
+    <?php if (!$recipe): ?>
+      <p>Recipe not found.</p>
+    <?php else: ?>
+      <h2><?= htmlspecialchars($recipe['title']) ?></h2>
+      <div class="recipe-meta">
+        <span><b>Category:</b> <?= htmlspecialchars($recipe['category']) ?></span>
+        <span><b>Score:</b> <?= htmlspecialchars($recipe['score']) ?></span>
+      </div>
+      <h3>Ingredients</h3>
+      <ul>
+        <?php foreach ($ingredients as $i): ?>
+          <li><?= htmlspecialchars($i['ingredient']) ?>: <?= htmlspecialchars($i['quantity']) ?></li>
+        <?php endforeach; ?>
+      </ul>
+      <h3>Steps</h3>
+      <ol>
+        <?php foreach ($steps as $s): ?>
+          <li><?= htmlspecialchars($s['description']) ?> (<?= htmlspecialchars($s['duration_minutes']) ?> min)</li>
+        <?php endforeach; ?>
+      </ol>
+      <a class="rate-link" href="rate.php?id=<?= htmlspecialchars($recipeId) ?>">Rate this recipe</a>
+      <?php if ($userId): ?>
+        <form method="post" style="display:inline;">
+          <?php if ($isFav): ?>
+            <button type="submit" name="action" value="remove" class="fav-button">💔 Remove from Favorites</button>
+          <?php else: ?>
+            <button type="submit" name="action" value="add" class="fav-button">❤️ Add to Favorites</button>
+          <?php endif; ?>
+        </form>
+      <?php endif; ?>
+    <?php endif; ?>
+  </div>
 </body>
 </html>

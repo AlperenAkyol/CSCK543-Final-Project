@@ -1,6 +1,18 @@
 <?php
-// Simulate logged-in user ID (in real app, use $_SESSION['user_id'])
-$user_id = 1;
+session_start();
+require_once '../../backend/db.php';
+$userId = $_SESSION['user_id'] ?? null;
+$favorites = [];
+if ($userId) {
+    $stmt = $pdo->prepare(
+        "SELECT r.id, r.title, r.category, r.score
+         FROM recipes r
+         JOIN favourites f ON f.recipe_id = r.id
+         WHERE f.user_id = ?"
+    );
+    $stmt->execute([$userId]);
+    $favorites = $stmt->fetchAll();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -35,6 +47,7 @@ $user_id = 1;
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
       gap: 20px;
+      padding: 0;
     }
     #favoriteList li {
       background-color: var(--white);
@@ -84,30 +97,22 @@ $user_id = 1;
 <body>
   <a class="back-btn" href="recipes.php">&lt; Back to All Recipes</a>
   <h2>★ My Favorite Recipes</h2>
-  <ul id="favoriteList"></ul>
-
-  <script>
-    const user_id = <?php echo json_encode($user_id); ?>;
-
-    async function loadFavorites() {
-      let res = await fetch("../../backend/recipe/favorites_list.php?user_id=" + user_id);
-      let data = await res.json();
-      let list = document.getElementById('favoriteList');
-      list.innerHTML = '';
-      if (data.length === 0) {
-        list.innerHTML = "<li>You have no favorites yet.</li>";
-        return;
-      }
-      data.forEach(r => {
-        let li = document.createElement('li');
-        li.innerHTML = `<a href="recipe.php?id=${r.id}">${r.title}</a> 
-                        <span class="category">(${r.category})</span>
-                        <span class="score">Score: ${r.score || 0}</span>`;
-        list.appendChild(li);
-      });
-    }
-
-    loadFavorites();
-  </script>
+  <ul id="favoriteList">
+    <?php if (!$userId): ?>
+      <li>You must be logged in to see favorites.</li>
+    <?php elseif (empty($favorites)): ?>
+      <li>You have no favorites yet.</li>
+    <?php else: ?>
+      <?php foreach ($favorites as $r): ?>
+        <li>
+          <a href="recipe.php?id=<?= htmlspecialchars($r['id']) ?>">
+            <?= htmlspecialchars($r['title']) ?>
+          </a>
+          <span class="category">(<?= htmlspecialchars($r['category']) ?>)</span>
+          <span class="score">Score: <?= htmlspecialchars($r['score'] ?? 0) ?></span>
+        </li>
+      <?php endforeach; ?>
+    <?php endif; ?>
+  </ul>
 </body>
 </html>
