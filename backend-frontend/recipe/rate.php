@@ -1,11 +1,10 @@
 <?php
 session_start();
-require_once '../../backend/db.php';
+require_once '../../database-connection/db.php';
 $recipeId = intval($_GET['id'] ?? 0);
 $userId = $_SESSION['user_id'] ?? null;
 $message = null;
 
-// Fetch the recipe to display title and basic info
 $recipe = null;
 if ($recipeId > 0) {
     $stmt = $pdo->prepare("SELECT id, title, category, score FROM recipes WHERE id = ?");
@@ -13,14 +12,12 @@ if ($recipeId > 0) {
     $recipe = $stmt->fetch();
 }
 
-// Handle rating submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $recipe) {
     $rating = intval($_POST['rating'] ?? 0);
 
     if ($rating < 1 || $rating > 5) {
         $message = "Please enter a rating from 1 to 5.";
     } else {
-        // Update recipe rating logic (as in your backend)
         $stmt = $pdo->prepare("UPDATE recipes SET total_points = total_points + ?, rate_count = rate_count + 1, score = (total_points + ?) / (rate_count + 1) WHERE id = ?");
         $stmt->execute([$rating, $rating, $recipeId]);
         $message = "Thank you for rating!";

@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../../backend/db.php'; // Adjust path as needed
+require_once '../../database-connection/db.php';
 
 $message = '';
 if ($_SERVER["REQUEST_METHOD"] === "POST") {

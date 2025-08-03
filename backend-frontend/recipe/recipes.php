@@ -1,8 +1,7 @@
 <?php
 session_start();
-require_once '../../backend/db.php'; // Make sure this path is correct
+require_once '../../database-connection/db.php';
 
-// Search logic
 $q = trim($_GET['q'] ?? '');
 if ($q !== '') {
     $stmt = $pdo->prepare("SELECT id, title, category, score FROM recipes WHERE title LIKE ? OR category LIKE ?");

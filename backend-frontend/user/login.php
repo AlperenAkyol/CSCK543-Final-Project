@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../../backend/db.php'; // Adjust path if needed
+require_once '../../database-connection/db.php';
 
 $error = '';
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $stmt->execute([$username_or_email, $username_or_email]);
         $user = $stmt->fetch();
 
-        if ($user && $user['password'] === $password) { // Use password_verify() if you hash passwords
+        if ($user && $user['password'] === $password) {
             $_SESSION['user_id'] = $user['id'];
             header("Location: ../recipe/recipes.php");
             exit;

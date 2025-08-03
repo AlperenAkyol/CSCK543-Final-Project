@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../../backend/db.php';
+require_once '../../database-connection/db.php';
 $userId = $_SESSION['user_id'] ?? null;
 $favorites = [];
 if ($userId) {

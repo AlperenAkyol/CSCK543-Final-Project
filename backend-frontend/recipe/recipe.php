@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../../backend/db.php';
+require_once '../../database-connection/db.php';
 $recipeId = intval($_GET['id'] ?? 0);
 $userId = $_SESSION['user_id'] ?? null;
 $recipe = null;
@@ -9,22 +9,18 @@ $steps = [];
 $isFav = false;
 
 if ($recipeId > 0) {
-    // Main recipe info
     $stmt = $pdo->prepare("SELECT * FROM recipes WHERE id = ?");
     $stmt->execute([$recipeId]);
     $recipe = $stmt->fetch();
 
-    // Ingredients
     $stmt = $pdo->prepare("SELECT ingredient, quantity FROM recipe_ingredients WHERE recipe_id = ?");
     $stmt->execute([$recipeId]);
     $ingredients = $stmt->fetchAll();
 
-    // Steps
     $stmt = $pdo->prepare("SELECT step_number, description, duration_minutes FROM recipe_steps WHERE recipe_id = ? ORDER BY step_number");
     $stmt->execute([$recipeId]);
     $steps = $stmt->fetchAll();
 
-    // Is this a favorite?
     if ($userId) {
         $stmt = $pdo->prepare("SELECT id FROM favourites WHERE user_id = ? AND recipe_id = ?");
         $stmt->execute([$userId, $recipeId]);
@@ -32,7 +28,6 @@ if ($recipeId > 0) {
     }
 }
 
-// Handle favorite add/remove
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $userId && $recipe) {
     if (isset($_POST['action'])) {
         if ($_POST['action'] === 'add') {
